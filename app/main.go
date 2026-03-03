@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
 // Ensures gofmt doesn't remove the "fmt" import in stage 1 (feel free to remove this!)
@@ -16,7 +15,7 @@ func main() {
 		fmt.Scan(&input)
 
 		if input == "exit" {
-			os.Exit(0)
+			break
 		}
 	
 		fmt.Printf("%s: command not found\n", input)
