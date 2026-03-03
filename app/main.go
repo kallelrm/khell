@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -9,20 +11,24 @@ import (
 var _ = fmt.Print
 
 func main() {
+	reader := bufio.NewReader(os.Stdin)
 	// TODO: Uncomment the code below to pass the first stage
 	for {
-		var input string
 		fmt.Print("$ ")
-		fmt.Scan(&input)
+		command, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error reading command: ", err)
+			os.Exit(1)
+		}
 		
-		input = strings.TrimSpace(input)
+		command = strings.TrimSpace(command)
 		
-		if input == "exit" {
+		if command == "exit" {
 			break
-		} else if strings.HasPrefix(input, "echo ") {
-			fmt.Println(input[5:])
+		} else if strings.HasPrefix(command, "echo ") {
+			fmt.Println(command[5:])
 		} else {
-			fmt.Printf("%s: command not found\n", input)
+			fmt.Printf("%s: command not found\n", command)
 		}
 	}
 }
