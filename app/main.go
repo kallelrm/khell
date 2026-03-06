@@ -127,6 +127,7 @@ func handleProgram (pathEnv, cmd string, args []string) int {
 
 		if !fileInfo.IsDir() && fileInfo.Mode()&0111 != 0 {
 			command := exec.Command(fullpath, args...)
+			command.Args[0] = cmd
 
 			// for idx, arg := range (command.Args) {
 			// 	if idx == 0 {
