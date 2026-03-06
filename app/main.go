@@ -116,11 +116,6 @@ func handleType(cmd, pathEnv string) {
 }
 
 func handleProgram (pathEnv, cmd string, args []string) int {
-	fmt.Printf("Program was passed %d args (including program name).\n", len(args) + 1)
-	fmt.Printf("Arg #0 (program name): %s\n", cmd)
-	for idx, arg := range(args) {
-		fmt.Printf("Arg #%d: %s\n", idx+1, arg)
-	}
 	pathElements := filepath.SplitList(pathEnv)
 
 	for _, dir := range (pathElements) {
@@ -132,6 +127,14 @@ func handleProgram (pathEnv, cmd string, args []string) int {
 
 		if !fileInfo.IsDir() && fileInfo.Mode()&0111 != 0 {
 			command := exec.Command(fullpath, args...)
+
+			// for idx, arg := range (command.Args) {
+			// 	if idx == 0 {
+			// 		fmt.Printf("")
+			// 	} else {
+			// 		mt.Printf("%v", command.Args)
+			// 	}
+			// }
 
 			command.Stdout = os.Stdout
 			command.Stderr = os.Stderr
