@@ -133,19 +133,18 @@ func handleProgram (pathEnv, cmd string, args []string) int {
 		if !fileInfo.IsDir() && fileInfo.Mode()&0111 != 0 {
 			command := exec.Command(fullpath, args...)
 
-			var out strings.Builder
-			var cmdErr strings.Builder
-			command.Stdout = &out	
-			command.Stderr = &cmdErr
+			command.Stdout = os.Stdout
+			command.Stderr = os.Stderr
+			command.Stdin = os.Stdin
 
 			err := command.Run()
 			if err != nil {
-				fmt.Println(cmdErr.String())
-				fmt.Printf("command finished with error: %v\n", err)
+				if exitErr, ok := err.(*exec.ExitError); ok {
+					return exitErr.ExitCode()
+				}
 				return 1
 			}
 
-			fmt.Printf("%s",out.String())
 			return 0
 		} 
 	}
