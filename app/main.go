@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 	"path/filepath"
-	// "os/exec"
+	"os/exec"
 	// "slices"
 )
 
@@ -70,7 +70,7 @@ func main() {
 				}
 			  handleType(args[0], PATH)
 			default:
-				fmt.Printf("%s: command not found\n", cmd)
+				handleProgram(PATH, cmd, args)
 
 		}
 	}
@@ -110,21 +110,47 @@ func handleType(cmd, pathEnv string) {
 			fmt.Printf("%s is %s\n", cmd, fullpath)
 			return
 		} 
-		// files, _ := os.ReadDir(dir)
-		// fmt.Println(files)
-		// if slices.Contains([]string(files), cmd) {
-		// 	fullPath := filepath.Join(dir, cmd)
-		// 	permissions, _ := os.Stat(fullPath)
-		//
-		// 	if permissions.Mode()&0111 != 0 {
-		// 		return
-		// 	}
-		// }
-		// // if slices.Contains(cmd, files) {
-		// // 	print(true)
-		// // 	// program, err := os.Lstat(fmt.Sprintf("%s%s"))
-		// // }
 	}
 
 	fmt.Printf("%s: not found\n", cmd)
+}
+
+func handleProgram (pathEnv, cmd string, args []string) int {
+	fmt.Printf("%s was passed %d args\n", cmd, len(args) + 1)
+	fmt.Printf("Arg #0: %s\n", cmd)
+	for idx, arg := range(args) {
+		fmt.Printf("Arg #%d: %s\n", idx+1, arg)
+	}
+	pathElements := filepath.SplitList(pathEnv)
+
+	for _, dir := range (pathElements) {
+		fullpath := filepath.Join(dir, cmd)
+		fileInfo, err := os.Stat(fullpath)
+		if err != nil {
+			continue
+		}
+
+		if !fileInfo.IsDir() && fileInfo.Mode()&0111 != 0 {
+			command := exec.Command(fullpath, args...)
+
+			var out strings.Builder
+			var cmdErr strings.Builder
+			command.Stdout = &out	
+			command.Stderr = &cmdErr
+
+			err := command.Run()
+			if err != nil {
+				fmt.Println(cmdErr.String())
+				fmt.Printf("command finished with error: %v\n", err)
+				return 1
+			}
+
+			fmt.Printf("%s",out.String())
+			return 0
+		} 
+	}
+
+	fmt.Printf("%s command not found\n", cmd)
+
+	return 0
 }
