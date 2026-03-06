@@ -116,7 +116,7 @@ func handleType(cmd, pathEnv string) {
 }
 
 func handleProgram (pathEnv, cmd string, args []string) int {
-	fmt.Printf("%s was passed %d args (including program name)\n", cmd, len(args) + 1)
+	fmt.Printf("Program was passed %d args (including program name).\n", len(args) + 1)
 	fmt.Printf("Arg #0 (progam name): %s\n", cmd)
 	for idx, arg := range(args) {
 		fmt.Printf("Arg #%d: %s\n", idx+1, arg)
