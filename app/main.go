@@ -153,7 +153,7 @@ func handleProgram (pathEnv, cmd string, args []string) int {
 		} 
 	}
 
-	fmt.Printf("%s command not found:\n", cmd)
+	fmt.Printf("%s: command not found\n", cmd)
 
 	return 0
 }
