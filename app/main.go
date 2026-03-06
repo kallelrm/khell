@@ -7,11 +7,7 @@ import (
 	"strings"
 	"path/filepath"
 	"os/exec"
-	// "slices"
 )
-
-// Ensures gofmt doesn't remove the "fmt" import in stage 1 (feel free to remove this!)
-var _ = fmt.Print
 
 type builtin int
 
@@ -128,14 +124,6 @@ func handleProgram (pathEnv, cmd string, args []string) int {
 		if !fileInfo.IsDir() && fileInfo.Mode()&0111 != 0 {
 			command := exec.Command(fullpath, args...)
 			command.Args[0] = cmd
-
-			// for idx, arg := range (command.Args) {
-			// 	if idx == 0 {
-			// 		fmt.Printf("")
-			// 	} else {
-			// 		mt.Printf("%v", command.Args)
-			// 	}
-			// }
 
 			command.Stdout = os.Stdout
 			command.Stderr = os.Stderr
