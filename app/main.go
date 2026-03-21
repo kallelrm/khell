@@ -15,6 +15,7 @@ const (
 	echo builtin = iota
 	exit
 	type_
+	pwd
 )
 
 func (b builtin) String() string {
@@ -25,6 +26,8 @@ func (b builtin) String() string {
 		return "exit"
 	case type_:
 		return "type"
+	case pwd:
+		return "pwd"
 	default:
 		return "unknown"
 	}	
@@ -37,9 +40,8 @@ var builtins = map[string]bool {
 }
 
 
-
 func main() {
-	forLoop: for {
+	for {
 		fmt.Print("$ ")
 		input, err := readFromStdin()
 		if err != nil {
@@ -59,15 +61,16 @@ func main() {
 			case echo.String():
 				handleEcho(args)
 			case exit.String():
-				break forLoop
+				return
 			case type_.String():
 				if len(args) == 0 {
 					continue
 				}
 			  handleType(args[0], PATH)
+			case pwd.String():
+				handlePwd()
 			default:
 				handleProgram(PATH, cmd, args)
-
 		}
 	}
 }
@@ -111,6 +114,15 @@ func handleType(cmd, pathEnv string) {
 	fmt.Printf("%s: not found\n", cmd)
 }
 
+func handlePwd() {
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("error getting working directory: %s", err)
+		return 
+	}
+	fmt.Printf("%v\n", pwd)
+}
+
 func handleProgram (pathEnv, cmd string, args []string) int {
 	pathElements := filepath.SplitList(pathEnv)
 
@@ -134,7 +146,7 @@ func handleProgram (pathEnv, cmd string, args []string) int {
 				if exitErr, ok := err.(*exec.ExitError); ok {
 					return exitErr.ExitCode()
 				}
-				return 1
+				return 127
 			}
 
 			return 0
