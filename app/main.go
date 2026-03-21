@@ -37,6 +37,7 @@ var builtins = map[string]bool {
 	echo.String(): true,
 	exit.String(): true,
 	type_.String(): true,
+	pwd.String(): true,
 }
 
 
