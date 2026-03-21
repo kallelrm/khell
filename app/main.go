@@ -145,7 +145,7 @@ func handleCd(targetPath[] string) {
 	}
 	err := os.Chdir(targetPath[0])
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("cd: %s: No such file or directory\n", targetPath[0])
 	}
 	os.Setenv("OLDPWD", wd)
 }
