@@ -121,33 +121,20 @@ func handleType(cmd, pathEnv string) {
 	fmt.Printf("%s: not found\n", cmd)
 }
 
-func handlePwd(){
-	wd, err := os.Getwd()
+func handlePwd() {
+	pwd, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("error getting working directory: %s\n", err)
-		return
+		fmt.Printf("error getting working directory: %s", err)
+		return 
 	}
-	fmt.Printf("%v\n", wd)
+	fmt.Printf("%v\n", pwd)
 }
 
 func handleCd(targetPath[] string) {
-	if len(targetPath) == 0 || targetPath[0] == "" || targetPath[0] == "~" {
-		err := os.Chdir(os.Getenv("HOME"))
-		if err != nil {
-			fmt.Println(err)
-		}
-		return
-	}
-	wd, _ := os.Getwd()
-	if targetPath[0] == "-" {
-		os.Chdir(os.Getenv("OLDPWD"))
-		return
-	}
-	err := os.Chdir(targetPath[0])
+	err := os.Chdir(strings.Join(targetPath,""))
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("error changing working directory: %s", err)
 	}
-	os.Setenv("OLDPWD", wd)
 }
 
 func handleProgram (pathEnv, cmd string, args []string) int {
